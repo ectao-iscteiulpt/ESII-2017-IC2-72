@@ -13,6 +13,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
+
 import mt.Order;
 import mt.comm.ServerComm;
 import mt.comm.ServerSideMessage;
@@ -99,12 +101,27 @@ public class MicroServer implements MicroTraderServer {
 					break;
 				case NEW_ORDER:
 					try {
+						// Boolean variable for the Business rules
+						boolean br3 = true;
+						
 						verifyUserConnected(msg);
-						if(msg.getOrder().getServerOrderID() == EMPTY){
-							msg.getOrder().setServerOrderID(id++);
+						
+						// Set of orders to check Business Rules
+						Set<Order> orders = orderMap.get(msg.getOrder().getNickname());
+						
+						// Verification of msg quantity for BR3
+						if (msg.getOrder().getNumberOfUnits() < 10) {
+							JOptionPane.showMessageDialog(null, "You cannot make a order with a quantity below 10 units.");
+							br3 = false;
 						}
-						notifyAllClients(msg.getOrder());
-						processNewOrder(msg);
+						
+						if (br3 == true) {
+							if(msg.getOrder().getServerOrderID() == EMPTY){
+								msg.getOrder().setServerOrderID(id++);
+								notifyAllClients(msg.getOrder());
+								processNewOrder(msg);
+							}
+						}
 					} catch (ServerException e) {
 						serverComm.sendError(msg.getSenderNickname(), e.getMessage());
 					}
