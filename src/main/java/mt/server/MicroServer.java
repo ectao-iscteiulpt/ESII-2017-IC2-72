@@ -357,7 +357,6 @@ public class MicroServer implements MicroTraderServer {
 		updatedOrders.add(buyOrder);
 		updatedOrders.add(sellerOrder);
 
-		
 	}
 
 	/**
