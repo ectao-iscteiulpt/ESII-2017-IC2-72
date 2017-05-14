@@ -102,26 +102,75 @@ public class MicroServer implements MicroTraderServer {
 				case NEW_ORDER:
 					try {
 						// Boolean variable for the Business rules
+						boolean ableBuy = true;
+						boolean ableSell = true;
 						boolean br3 = true;
-						
+						boolean br2 = true;
+
 						verifyUserConnected(msg);
-						
+
 						// Set of orders to check Business Rules
 						Set<Order> orders = orderMap.get(msg.getOrder().getNickname());
-						
+
+						// Number of sell orders for that seller
+						int numberOfSellOrders = 0;
+
+						for (Order order : orders) {
+
+							// Verification if it is a sell order for BR2
+							if (order.isSellOrder())
+								numberOfSellOrders++;
+
+							// Verification if it is a sell order and if msg
+							// received is a buy order
+							// for BR1
+							if (order.isSellOrder() && msg.getOrder().isBuyOrder()
+									&& order.getStock().equals(msg.getOrder().getStock())) {
+								ableBuy = false;
+							}
+
+							// Verification if it is a buy order and if msg received
+							// is a sell order for BR1
+							if (order.isBuyOrder() && msg.getOrder().isSellOrder()
+									&& order.getStock().equals(msg.getOrder().getStock())) {
+								ableSell = false;
+							}
+						}
 						// Verification of msg quantity for BR3
 						if (msg.getOrder().getNumberOfUnits() < 10) {
 							JOptionPane.showMessageDialog(null, "You cannot make a order with a quantity below 10 units.");
 							br3 = false;
 						}
-						
-						if (br3 == true) {
-							if(msg.getOrder().getServerOrderID() == EMPTY){
-								msg.getOrder().setServerOrderID(id++);
+						// Verification of number of pending sell orders for this
+						// user for BR2
+						if (numberOfSellOrders == 5 && msg.getOrder().isSellOrder()) {
+							JOptionPane.showMessageDialog(null, "You already have 5 sell orders pending.");
+							br2 = false;
+						}
+
+						// If the order is valid for transaction it goes through
+						// this IF
+						if (msg.getOrder().isBuyOrder() && ableBuy == true
+								|| msg.getOrder().isSellOrder() && ableSell == true) {
+
+							if (br2 == true && br3 == true) {
+								if (msg.getOrder().getServerOrderID() == EMPTY) {
+									msg.getOrder().setServerOrderID(id++);
+								}
+								
 								notifyAllClients(msg.getOrder());
 								processNewOrder(msg);
+							
 							}
+						} else {
+
+							//Errors for BR1
+							if (msg.getOrder().isBuyOrder())
+								JOptionPane.showMessageDialog(null, "You cannot buy this item because you already have a selling order for it pending.");
+							else
+								JOptionPane.showMessageDialog(null, "You cannot sell this item because you already have a buying order for it pending.");
 						}
+
 					} catch (ServerException e) {
 						serverComm.sendError(msg.getSenderNickname(), e.getMessage());
 					}
