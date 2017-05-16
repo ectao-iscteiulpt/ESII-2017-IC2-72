@@ -139,14 +139,12 @@ public class MicroServer implements MicroTraderServer {
 						JOptionPane.showMessageDialog(null, "You cannot make a order with a quantity below 10 units.");
 						br3 = false;
 					}
-
 					// Verification of number of pending sell orders for this
 					// user for BR2
 					if (numberOfSellOrders == 5 && msg.getOrder().isSellOrder()) {
 						JOptionPane.showMessageDialog(null, "You already have 5 sell orders pending.");
 						br2 = false;
 					}
-
 					if (br2 == true && br3 == true) {
 						if (msg.getOrder().getServerOrderID() == EMPTY) {
 							msg.getOrder().setServerOrderID(id++);
@@ -436,8 +434,7 @@ public class MicroServer implements MicroTraderServer {
 	private void functionalRequirementXML(ServerSideMessage msg, Order order, int type) {
 		// type 1 is an order and type 2 is a message
 		try {
-
-			File inputFile = new File("/ESII2017MiniTrader/persistence.xml");
+			File inputFile = new File("persistence.xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(inputFile);
@@ -457,22 +454,10 @@ public class MicroServer implements MicroTraderServer {
 
 				// Create new element Customer
 				Element newElementCustomer = doc.createElement("Customer");
-				newElementCustomer.setTextContent("User");
+			//	newElementCustomer.setTextContent(msg.getSenderNickname());
 				newElementOrder.appendChild(newElementCustomer);
 			} else {
-				newElementOrder.setAttribute("Id", Integer.toString(order.getServerOrderID()));
-				if (order.isBuyOrder())
-					newElementOrder.setAttribute("Type", "Buy");
-				else
-					newElementOrder.setAttribute("Type", "Sell");
-				newElementOrder.setAttribute("Stock", order.getStock());
-				newElementOrder.setAttribute("Units", Integer.toString(order.getNumberOfUnits()));
-				newElementOrder.setAttribute("Price", Double.toString(order.getPricePerUnit()));
 
-				// Create new element Customer
-				Element newElementCustomer = doc.createElement("Customer");
-				newElementCustomer.setTextContent(order.getNickname());
-				newElementOrder.appendChild(newElementCustomer);
 			}
 
 			// Add new node to XML document root element
@@ -491,5 +476,6 @@ public class MicroServer implements MicroTraderServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 	}
 }
