@@ -413,7 +413,6 @@ public class MicroServer implements MicroTraderServer {
 	private void functionalRequirementXML(ServerSideMessage msg, Order order, int type) {
 		// type 1 is an order and type 2 is a message
 		try {
-			System.out.println("AQUIIIIIIIIIIIIIIIIIIII!!!!!!!!!!!!!");
 			File inputFile = new File("persistence.xml");
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
