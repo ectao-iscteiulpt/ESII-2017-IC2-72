@@ -271,6 +271,10 @@ public class MicroServer implements MicroTraderServer {
 
 		// save the order on map
 		saveOrder(o);
+		
+
+		// Record for XML persistence
+		functionalRequirementXML(msg, null, 2);
 
 		// if is buy order
 		if (o.isBuyOrder()) {
@@ -372,10 +376,6 @@ public class MicroServer implements MicroTraderServer {
 
 		updatedOrders.add(buyOrder);
 		updatedOrders.add(sellerOrder);
-
-		// Record for XML persistence
-		functionalRequirementXML(null, buyOrder, 1);
-		functionalRequirementXML(null, sellerOrder, 1);
 	}
 
 	/**
@@ -453,9 +453,9 @@ public class MicroServer implements MicroTraderServer {
 				newElementOrder.setAttribute("Price", Double.toString(msg.getOrder().getPricePerUnit()));
 
 				// Create new element Customer
-				Element newElementCustomer = doc.createElement("Customer");
-			//	newElementCustomer.setTextContent(msg.getSenderNickname());
-				newElementOrder.appendChild(newElementCustomer);
+//				Element newElementCustomer = doc.createElement("Customer");
+//				newElementCustomer.setTextContent(msg.getSenderNickname());
+//				newElementOrder.appendChild(newElementCustomer);
 			} else {
 
 			}

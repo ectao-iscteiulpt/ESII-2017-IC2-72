@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <XML>
-<Order/>
-<Order/>
-<Order/>
-<Order/>
-<Order/>
-<Order/>
-<Order/>
-<Order/>
+<Order Id="1" Price="11.0" Stock="cooc" Type="Sell" Units="11"/>
+<Order Id="2" Price="11.0" Stock="cooc" Type="Buy" Units="11"/>
 </XML>
